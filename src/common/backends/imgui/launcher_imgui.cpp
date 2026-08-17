@@ -2197,7 +2197,7 @@ bool any_deep_display(const LauncherModel* m) {
     return m->has_window_size || m->has_renderer || m->has_supersampling ||
            m->has_antialiasing || m->has_texture_filter || m->has_screen_kind ||
            m->has_video_filter ||
-           m->has_frame_interp || m->has_skip_fmv || m->has_texture_pack ||
+           m->has_frame_interp || m->has_skip_fmv || m->has_texture_pack || m->has_fmv_pack ||
            m->has_geometry_precision ||
            m->has_rewind_depth;   /* has_turbo_loads draws no row — see below */
 }
@@ -2473,6 +2473,15 @@ void draw_display_controls(LauncherModel* m, const LauncherTheme& th) {
         if (m->texture_pack_label && m->texture_pack_label[0]) {
             ImGui::SameLine();
             ImGui::TextDisabled("%s", m->texture_pack_label);
+        }
+    }
+    if (m->has_fmv_pack) {
+        row_label("HD movies", th);
+        bool fp = m->s.fmv_pack != 0;
+        if (ImGui::Checkbox("##fmvpack", &fp)) launcher_model_toggle_fmv_pack(m);
+        if (m->fmv_pack_label && m->fmv_pack_label[0]) {
+            ImGui::SameLine();
+            ImGui::TextDisabled("%s", m->fmv_pack_label);
         }
     }
 

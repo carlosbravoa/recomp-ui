@@ -49,6 +49,8 @@ extern "C" {
 /* Host may #ifdef this when setting GameInfo.has_texture_pack /
  * reading Settings.texture_pack (HD texture-pack toggle). */
 #define RECOMP_LAUNCHER_HAS_TEXTURE_PACK 1
+/* Same for GameInfo.has_fmv_pack / Settings.fmv_pack (HD movie-pack toggle). */
+#define RECOMP_LAUNCHER_HAS_FMV_PACK 1
 #define RECOMP_LAUNCHER_MAX_BINDINGS 24
 #define RECOMP_LAUNCHER_MAX_ASSIST_BINDINGS 8
 
@@ -473,6 +475,7 @@ struct RecompLauncherCSettings {
     int  auto_skip_fmv;       // bool
     int  turbo_loads;         // bool
     int  texture_pack;        // bool: use the game's HD texture pack (GameInfo.has_texture_pack)
+    int  fmv_pack;            // bool: use the game's HD movie pack (GameInfo.has_fmv_pack)
     int  language_index;      // selected index into GameInfo.languages
     char bios_path[512];      // BIOS file path (empty = default)
 
@@ -769,6 +772,8 @@ typedef struct RecompLauncherCGameInfo {
     int  has_turbo_loads;
     int  has_texture_pack;      // "HD textures" checkbox (host ships/points at a texture pack)
     const char* texture_pack_label; // optional row detail (pack name); NULL = generic label
+    int  has_fmv_pack;          // "HD movies" checkbox (host ships/points at an FMV pack)
+    const char* fmv_pack_label; // optional row detail (pack name); NULL = generic label
     int  has_fullscreen_toggle; // DEPRECATED, ignored: the Fullscreen row is universal
                                 // (every console, tri-state 0 off/1 borderless/2 exclusive).
                                 // Kept only for ABI layout compatibility.
