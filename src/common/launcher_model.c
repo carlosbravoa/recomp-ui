@@ -129,6 +129,8 @@ void launcher_model_init(LauncherModel* m,
         m->has_rewind_depth     = game->has_rewind_depth != 0;
         m->has_skip_fmv         = game->has_skip_fmv != 0;
         m->has_turbo_loads      = game->has_turbo_loads != 0;
+        m->has_texture_pack     = game->has_texture_pack != 0;
+        m->texture_pack_label   = game->texture_pack_label;
         m->has_geometry_precision = game->has_geometry_precision != 0;
         // game->has_fullscreen_toggle is deliberately NOT read: the Fullscreen
         // row is universal (drawn for every console) — see recomp_launcher.h.
@@ -1205,6 +1207,10 @@ const char* launcher_model_rewind_interval_label(const LauncherModel* m) {
 
 void launcher_model_toggle_skip_fmv(LauncherModel* m) {
     m->s.auto_skip_fmv = !m->s.auto_skip_fmv;
+}
+
+void launcher_model_toggle_texture_pack(LauncherModel* m) {
+    m->s.texture_pack = !m->s.texture_pack;
 }
 
 void launcher_model_toggle_turbo_loads(LauncherModel* m) {

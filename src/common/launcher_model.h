@@ -345,6 +345,8 @@ typedef struct {
     bool     has_rewind_depth;
     bool     has_skip_fmv;
     bool     has_turbo_loads;
+    bool     has_texture_pack;
+    const char* texture_pack_label;
     // PSX geometry precision: sub-pixel vertices + perspective-correct UVs.
     // One flag gates both rows (two halves of one enhancement); the settings
     // stay independent. false => both rows hidden.
@@ -628,6 +630,7 @@ const char* launcher_model_rewind_depth_label(const LauncherModel* m);
 void launcher_model_cycle_rewind_interval(LauncherModel* m);
 const char* launcher_model_rewind_interval_label(const LauncherModel* m);
 void launcher_model_toggle_skip_fmv(LauncherModel* m);
+void launcher_model_toggle_texture_pack(LauncherModel* m);
 void launcher_model_toggle_turbo_loads(LauncherModel* m);
 void launcher_model_cycle_fullscreen(LauncherModel* m);        // Off -> Borderless -> Exclusive, wraps
 const char* launcher_model_fullscreen_label(const LauncherModel* m);  // "Off"/"Borderless"/"Exclusive"
