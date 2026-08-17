@@ -133,6 +133,8 @@ void launcher_model_init(LauncherModel* m,
         m->texture_pack_label   = game->texture_pack_label;
         m->has_fmv_pack         = game->has_fmv_pack != 0;
         m->fmv_pack_label       = game->fmv_pack_label;
+        m->bookmark_labels      = game->bookmark_labels;
+        m->num_bookmarks        = game->num_bookmarks;
         m->has_geometry_precision = game->has_geometry_precision != 0;
         // game->has_fullscreen_toggle is deliberately NOT read: the Fullscreen
         // row is universal (drawn for every console) — see recomp_launcher.h.
@@ -1217,6 +1219,19 @@ void launcher_model_toggle_texture_pack(LauncherModel* m) {
 
 void launcher_model_toggle_fmv_pack(LauncherModel* m) {
     m->s.fmv_pack = !m->s.fmv_pack;
+}
+
+void launcher_model_cycle_bookmark(LauncherModel* m) {
+    if (m->num_bookmarks <= 0) { m->s.bookmark_index = 0; return; }
+    m->s.bookmark_index = (m->s.bookmark_index + 1) % (m->num_bookmarks + 1);
+}
+
+const char* launcher_model_bookmark_label(const LauncherModel* m) {
+    if (m->num_bookmarks <= 0 || !m->bookmark_labels || m->s.bookmark_index <= 0 ||
+        m->s.bookmark_index > m->num_bookmarks)
+        return "Normal boot";
+    const char* l = m->bookmark_labels[m->s.bookmark_index - 1];
+    return l ? l : "Normal boot";
 }
 
 void launcher_model_toggle_turbo_loads(LauncherModel* m) {

@@ -51,6 +51,9 @@ extern "C" {
 #define RECOMP_LAUNCHER_HAS_TEXTURE_PACK 1
 /* Same for GameInfo.has_fmv_pack / Settings.fmv_pack (HD movie-pack toggle). */
 #define RECOMP_LAUNCHER_HAS_FMV_PACK 1
+/* Same for GameInfo.bookmark_labels / num_bookmarks / Settings.bookmark_index
+ * ("Start at" row: boot normally or resume a host-provided savestate). */
+#define RECOMP_LAUNCHER_HAS_BOOKMARKS 1
 #define RECOMP_LAUNCHER_MAX_BINDINGS 24
 #define RECOMP_LAUNCHER_MAX_ASSIST_BINDINGS 8
 
@@ -476,6 +479,7 @@ struct RecompLauncherCSettings {
     int  turbo_loads;         // bool
     int  texture_pack;        // bool: use the game's HD texture pack (GameInfo.has_texture_pack)
     int  fmv_pack;            // bool: use the game's HD movie pack (GameInfo.has_fmv_pack)
+    int  bookmark_index;      // "Start at": 0 = normal boot, else 1-based index into GameInfo.bookmark_labels
     int  language_index;      // selected index into GameInfo.languages
     char bios_path[512];      // BIOS file path (empty = default)
 
@@ -774,6 +778,11 @@ typedef struct RecompLauncherCGameInfo {
     const char* texture_pack_label; // optional row detail (pack name); NULL = generic label
     int  has_fmv_pack;          // "HD movies" checkbox (host ships/points at an FMV pack)
     const char* fmv_pack_label; // optional row detail (pack name); NULL = generic label
+    // "Start at" bookmarks: savestates the host found (e.g. saves/bookmarks/*.pst);
+    // the launcher shows a cycle row (Normal boot / <label>...) when num_bookmarks > 0
+    // and the host resumes the chosen one after boot. Not persisted.
+    const char* const* bookmark_labels;
+    int  num_bookmarks;
     int  has_fullscreen_toggle; // DEPRECATED, ignored: the Fullscreen row is universal
                                 // (every console, tri-state 0 off/1 borderless/2 exclusive).
                                 // Kept only for ABI layout compatibility.

@@ -2808,6 +2808,20 @@ void draw_system_controls(LauncherModel* m, const LauncherTheme& th) {
                 "Uses existing generated C (no setup wizard).");
         }
     }
+    // "Start at": resume one of the host's bookmark savestates instead of
+    // booting normally (testing / stage select without playing there). Cycle
+    // button like Language; not persisted, so every launch defaults to a
+    // normal boot.
+    if (m->num_bookmarks > 0) {
+        row_label("Start at", th);
+        const float bw = ImGui::GetContentRegionAvail().x;
+        if (ImGui::Button(launcher_model_bookmark_label(m), ImVec2(bw > px(140) ? bw : px(140), btn_h)))
+            launcher_model_cycle_bookmark(m);
+        if (ImGui::IsItemHovered())
+            ImGui::SetTooltip("Bookmarks are savestates in the game's saves/bookmarks folder\n"
+                              "(one .pst per entry, named as you want them listed).\n"
+                              "Click to cycle; the game resumes there right after boot.");
+    }
     ImGui::PopStyleVar();
 }
 void panel_system_draw(LauncherModel* m, const LauncherTheme* th) {
