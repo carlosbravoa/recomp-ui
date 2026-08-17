@@ -274,6 +274,10 @@ typedef struct {
     bool has_gyro_controls;
     bool has_sharp_filter;
     bool has_affine_filter;
+    // Present-time video filter cycle (GameInfo.has_video_filter + names).
+    bool has_video_filter;
+    const char* const* video_filter_names;
+    int  video_filter_count;
     bool netplay_supported;
     /* Host opted into first-run wizard + Generate & rebuild (GameInfo). */
     bool setup_wizard_supported;
@@ -613,6 +617,8 @@ void launcher_model_toggle_perspective_texturing(LauncherModel* m);
 bool launcher_model_geometry_correction_inert(const LauncherModel* m);
 void launcher_model_cycle_screen_kind(LauncherModel* m);       // Raw/CRT/Composite/Trinitron
 const char* launcher_model_screen_kind_label(const LauncherModel* m);
+void launcher_model_cycle_video_filter(LauncherModel* m);      // host vocabulary, wraps
+const char* launcher_model_video_filter_label(const LauncherModel* m);
 void launcher_model_toggle_frame_interp(LauncherModel* m);
 void launcher_model_cycle_interp_fps(LauncherModel* m);        // {0,90,120,144,165,240} wrap
 const char* launcher_model_interp_fps_label(const LauncherModel* m);  // "Display refresh"/"90 fps"

@@ -43,6 +43,9 @@ extern "C" {
 #define RECOMP_LAUNCHER_HAS_REWIND_DEPTH 1
 /* Host may #ifdef this when reading Settings.rewind_interval. */
 #define RECOMP_LAUNCHER_HAS_REWIND_INTERVAL 1
+/* Host may #ifdef this when reading Settings.video_filter /
+ * GameInfo.video_filter_names (present-time video filter cycle). */
+#define RECOMP_LAUNCHER_HAS_VIDEO_FILTER 1
 #define RECOMP_LAUNCHER_MAX_BINDINGS 24
 #define RECOMP_LAUNCHER_MAX_ASSIST_BINDINGS 8
 
@@ -627,6 +630,13 @@ struct RecompLauncherCSettings {
     // the host validates on use and persists it like bios_path. Appended
     // additively, same ABI convention as every block above.
     char player_name[64];
+
+    // ---- present-time video filter (GameInfo.has_video_filter consoles) --
+    // Index into GameInfo.video_filter_names (host-owned vocabulary: e.g. the
+    // PSX runtime's None / Sharp / Scale2x / 2xSaI / xBR / Scanlines / CRT
+    // list). 0 = the host's default ("None"). Appended additively; hosts
+    // that predate it leave 0 and never see the row.
+    int  video_filter;
 };
 
 // ---- host verification/inspection results (filled by the callbacks below) ----
@@ -1080,6 +1090,16 @@ typedef struct RecompLauncherCGameInfo {
      * name field (e.g. "Console MAC: 00:09:BF:xx:xx:xx"). NULL hides it. */
     int has_player_name;
     const char* identity_detail;
+
+    /* Present-time video filter cycle ("Video filter" row in Display).
+     * has_video_filter=1 with a non-NULL names table shows a button cycling
+     * through video_filter_names[0..count-1]; Settings.video_filter is the
+     * selected index. The host owns the vocabulary and its meaning (the PSX
+     * runtime maps it onto video_filter.h kinds). 0/NULL => no row, every
+     * existing consumer byte-for-byte unchanged. Appended additively. */
+    int                has_video_filter;
+    const char* const* video_filter_names;
+    int                video_filter_count;
 } RecompLauncherCGameInfo;
 
 /* recomp_launcher_run_window return codes */

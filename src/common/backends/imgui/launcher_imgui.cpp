@@ -2196,6 +2196,7 @@ static const char* elide_left(const char* s, float max_w, char* out, size_t cap)
 bool any_deep_display(const LauncherModel* m) {
     return m->has_window_size || m->has_renderer || m->has_supersampling ||
            m->has_antialiasing || m->has_texture_filter || m->has_screen_kind ||
+           m->has_video_filter ||
            m->has_frame_interp || m->has_skip_fmv ||
            m->has_geometry_precision ||
            m->has_rewind_depth;   /* has_turbo_loads draws no row — see below */
@@ -2426,6 +2427,23 @@ void draw_display_controls(LauncherModel* m, const LauncherTheme& th) {
         // shorter models (e.g. "DMG") center within the same fixed box.
         if (ImGui::Button(launcher_model_screen_kind_label(m), ImVec2(px(220), px(30))))
             launcher_model_cycle_screen_kind(m);
+    }
+
+    if (m->has_video_filter) {
+        // Present-time pixel-art scaler / display look, host vocabulary
+        // (PSX: None, Sharp, Scale2x/3x, 2xSaI family, xBR 2x-4x, Scanlines,
+        // CRT). Presentation only — never changes what the game renders.
+        row_label("Video filter", th);
+        ImGui::PushID("video_filter");
+        if (ImGui::Button(launcher_model_video_filter_label(m), ImVec2(px(220), px(30))))
+            launcher_model_cycle_video_filter(m);
+        ImGui::PopID();
+        if (ImGui::IsItemHovered())
+            ImGui::SetTooltip("Upscales the finished frame with an edge-aware "
+                              "pixel-art scaler (Scale2x, 2xSaI, xBR) or applies "
+                              "a display look (sharp bilinear, scanlines, CRT).\n\n"
+                              "Presentation only: what the game renders, saves "
+                              "and netplay are untouched.");
     }
 
     // Frame interpolation is only meaningful under OpenGL (Software has no

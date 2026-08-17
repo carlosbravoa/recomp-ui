@@ -225,6 +225,11 @@ void launcher_model_init(LauncherModel* m,
         m->has_gyro_controls    = game->has_gyro_controls != 0;
         m->has_sharp_filter     = game->has_sharp_filter != 0;
         m->has_affine_filter    = game->has_affine_filter != 0;
+        m->has_video_filter     = game->has_video_filter != 0 &&
+                                  game->video_filter_names != NULL &&
+                                  game->video_filter_count > 0;
+        m->video_filter_names   = m->has_video_filter ? game->video_filter_names : NULL;
+        m->video_filter_count   = m->has_video_filter ? game->video_filter_count : 0;
         m->netplay_supported    = game->netplay_supported != 0 && game->netplay != NULL;
         m->netplay              = game->netplay;
 #if RECOMP_UI_ENABLE_MODS
@@ -396,6 +401,8 @@ void launcher_model_init(LauncherModel* m,
         m->s.screen_kind = clampi(m->s.screen_kind, 0, sk_n - 1);
     }
     if (m->has_texture_filter) m->s.texture_filter = m->s.texture_filter ? 1 : 0;
+    if (m->has_video_filter)
+        m->s.video_filter = clampi(m->s.video_filter, 0, m->video_filter_count - 1);
     if (m->has_renderer) {
         if (m->renderer_labels && m->num_renderers > 0) {
             /* Multi-label cycle (Software / OpenGL / Vulkan). Prefer OpenGL
@@ -1126,6 +1133,17 @@ const char* launcher_model_screen_kind_label(const LauncherModel* m) {
     int n = 4;
     const char* const* names = screen_kind_vocab(m, &n);
     return names[clampi(m->s.screen_kind, 0, n - 1)];
+}
+
+void launcher_model_cycle_video_filter(LauncherModel* m) {
+    if (!m || !m->has_video_filter || m->video_filter_count <= 0) return;
+    m->s.video_filter = (clampi(m->s.video_filter, 0, m->video_filter_count - 1) + 1)
+                        % m->video_filter_count;
+}
+
+const char* launcher_model_video_filter_label(const LauncherModel* m) {
+    if (!m || !m->has_video_filter || m->video_filter_count <= 0) return "None";
+    return m->video_filter_names[clampi(m->s.video_filter, 0, m->video_filter_count - 1)];
 }
 
 void launcher_model_toggle_frame_interp(LauncherModel* m) {
